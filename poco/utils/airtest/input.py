@@ -29,14 +29,20 @@ def serializable_adapter(func):
 
     return wrapped
 
-
-@serializable_adapter
-@logwrap
 def record_ui(driver, action, ui, args):
-    return ui
+    uwa_record_ui(action, ui.query, args)
+    return
+
+
+@logwrap
+def uwa_record_ui(action, query, args):
+    return
+
 
 
 class AirtestInput(InputInterface):
+    """ 在 log 中，需要记录 UI 参数(query) 以及原始调用参数（相对位置） """
+
     def __init__(self):
         super(AirtestInput, self).__init__()
         self.default_touch_down_duration = 0.01

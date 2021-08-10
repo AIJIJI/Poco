@@ -330,7 +330,10 @@ class UIObjectProxy(object):
 
         focus = focus or self._focus or 'anchor'
         pos_in_percentage = self.get_position(focus)
-        self.poco.pre_action('click', self, pos_in_percentage)
+        # [UWA]
+        # pre action 记录 focus 与 sleep_interval 原始值
+        self.poco.pre_action(
+            'click', self, {"focus": focus, "sleep_interval": sleep_interval})
         ret = self.poco.click(pos_in_percentage)
         if sleep_interval:
             time.sleep(sleep_interval)
@@ -362,7 +365,7 @@ class UIObjectProxy(object):
 
         focus = focus or self._focus or 'anchor'
         pos_in_percentage = self.get_position(focus)
-        self.poco.pre_action('rclick', self, pos_in_percentage)
+        self.poco.pre_action('rclick', self, {"focus": focus, "sleep_interval": sleep_interval})
         ret = self.poco.rclick(pos_in_percentage)
         if sleep_interval:
             time.sleep(sleep_interval)
@@ -394,7 +397,7 @@ class UIObjectProxy(object):
 
         focus = focus or self._focus or 'anchor'
         pos_in_percentage = self.get_position(focus)
-        self.poco.pre_action('double_click', self, pos_in_percentage)
+        self.poco.pre_action('double_click', self, {"focus": focus, "sleep_interval": sleep_interval})
         ret = self.poco.double_click(pos_in_percentage)
         if sleep_interval:
             time.sleep(sleep_interval)
@@ -423,7 +426,7 @@ class UIObjectProxy(object):
             raise ValueError('Argument `duration` should be <float>. Got {}'.format(repr(duration)))
 
         pos_in_percentage = self.get_position(self._focus or 'anchor')
-        self.poco.pre_action('long_click', self, pos_in_percentage)
+        self.poco.pre_action('long_click', self, {"duration": duration})
         ret = self.poco.long_click(pos_in_percentage, duration)
         self.poco.post_action('long_click', self, pos_in_percentage)
         return ret
@@ -455,7 +458,7 @@ class UIObjectProxy(object):
         focus = focus or self._focus or 'anchor'
         dir_vec = self._direction_vector_of(direction)
         origin = self.get_position(focus)
-        self.poco.pre_action('swipe', self, (origin, dir_vec))
+        self.poco.pre_action('swipe', self, {"direction": direction, "focus": focus, "duration": duration})
         ret = self.poco.swipe(origin, direction=dir_vec, duration=duration)
         self.poco.post_action('swipe', self, (origin, dir_vec))
         return ret
