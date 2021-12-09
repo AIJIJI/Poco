@@ -249,7 +249,7 @@ class Poco(PocoAccelerationMixin):
 
         if not (0 <= pos[0] <= 1) or not (0 <= pos[1] <= 1):
             raise InvalidOperationException('Click position out of screen. pos={}'.format(repr(pos)))
-        ret = self.agent.input.click(pos[0], pos[1])
+        ret = self.agent.input.click(pos[0], pos[1], uwa_raw_args=pos)
         self.wait_stable()
         return ret
 

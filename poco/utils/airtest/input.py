@@ -82,23 +82,24 @@ class AirtestInput(InputInterface):
     def getTouchDownDuration(self):
         return self.default_touch_down_duration
 
-    def click(self, x, y):
+    def click(self, x, y, **uwa_kwargs):
+        # uwa_kwargs: 用于扩展日志
         pos = self.get_target_pos(x, y)
-        touch(pos, duration=self.default_touch_down_duration)
+        touch(pos, duration=self.default_touch_down_duration, **uwa_kwargs)
 
-    def swipe(self, x1, y1, x2, y2, duration=2.0):
+    def swipe(self, x1, y1, x2, y2, duration=2.0, **uwa_kwaargs):
         if duration <= 0:
             raise ValueError("Operation duration cannot be less equal 0. Please provide a positive number.")
         direction = x2 - x1, y2 - y1
         pos = self.get_target_pos(x1, y1)
         steps = int(duration * 40) + 1
-        swipe(pos, vector=direction, duration=duration, steps=steps)
+        swipe(pos, vector=direction, duration=duration, steps=steps, **uwa_kwaargs)
 
-    def longClick(self, x, y, duration=2.0):
+    def longClick(self, x, y, duration=2.0, **uwa_kwaargs):
         if duration <= 0:
             raise ValueError("Operation duration cannot be less equal 0. Please provide a positive number.")
         pos = self.get_target_pos(x, y)
-        touch(pos, duration=duration)
+        touch(pos, duration=duration, **uwa_kwaargs)
 
     def applyMotionEvents(self, events):
         if device_platform() != 'Android':
