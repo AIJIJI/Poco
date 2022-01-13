@@ -14,7 +14,7 @@ from .utils.track import MotionTrackBatch
 from .utils.multitouch_gesture import make_pinching
 from .gesture import PendingGestureAction
 
-__author__ = 'lxn3032'
+__author__ = "lxn3032"
 
 
 class Poco(PocoAccelerationMixin):
@@ -33,7 +33,7 @@ class Poco(PocoAccelerationMixin):
               performed. If the target UI element does not appear on the screen after this time interval, the
               :py:class:`PocoNoSuchNodeException <poco.exceptions.PocoNoSuchNodeException>` is raised
             - ``touch_down_duration``: Touch down step duration of the click operation last for. If this argument is
-              provided, this value will set to ``self.agent.input`` module. Note that not all implementation of poco 
+              provided, this value will set to ``self.agent.input`` module. Note that not all implementation of poco
               support this parameter. If not support, you may see a warning.
             - ``reevaluate_volatile_attributes``: Re-select target UI proxy when retrieving volatile attributes. Poco
               drivers that using hrpc connections should default to be ``False`` as hrpc always reevaluate the
@@ -45,17 +45,24 @@ class Poco(PocoAccelerationMixin):
         self._agent = agent
 
         # options
-        self._pre_action_wait_for_appearance = options.get('pre_action_wait_for_appearance', 6)
-        self._post_action_interval = options.get('action_interval', 0.8)
-        self._poll_interval = options.get('poll_interval', 1.44)
-        self._reevaluate_volatile_attributes = options.get('reevaluate_volatile_attributes', False)
-        if 'touch_down_duration' in options:
-            touch_down_duration = options['touch_down_duration']
+        self._pre_action_wait_for_appearance = options.get(
+            "pre_action_wait_for_appearance", 6
+        )
+        self._post_action_interval = options.get("action_interval", 0.8)
+        self._poll_interval = options.get("poll_interval", 1.44)
+        self._reevaluate_volatile_attributes = options.get(
+            "reevaluate_volatile_attributes", False
+        )
+        if "touch_down_duration" in options:
+            touch_down_duration = options["touch_down_duration"]
             try:
                 touch_down_duration = float(touch_down_duration)
             except ValueError:
-                raise ValueError('Option `touch_down_duration` should be <float>. Got {}'
-                                 .format(repr(touch_down_duration)))
+                raise ValueError(
+                    "Option `touch_down_duration` should be <float>. Got {}".format(
+                        repr(touch_down_duration)
+                    )
+                )
             self._agent.input.setTouchDownDuration(touch_down_duration)
 
         self._pre_action_callbacks = [self.__class__.on_pre_action]
@@ -68,7 +75,7 @@ class Poco(PocoAccelerationMixin):
         and/or other attributes. Invisible UI elements will be skipped even if "visible=False" argument is set.
 
         Selection process is not executed instantly, the query expression is stored in the UI proxy and the selection is
-        executed only then when the UI element(s) info is required (such get the point coordinates where to click, 
+        executed only then when the UI element(s) info is required (such get the point coordinates where to click,
         and/or retrieve the specific attribute value).
 
         Examples:
@@ -82,11 +89,11 @@ class Poco(PocoAccelerationMixin):
 
         Keyword Args:
             xx: arbitrary key value pair that stands for selecting the UI matching the value of ``UI.xx``
-            xxMatches (:obj:`str`): arbitrary key value pair that stands for selecting the UI matching the regular 
+            xxMatches (:obj:`str`): arbitrary key value pair that stands for selecting the UI matching the regular
              expression pattern ``UI.xx``
 
         In keyword args, you can only use `xx` or `xxMatches` at the same time. Using both with the same attribute does
-        not make sense. Besides, `xx` should not start with ``_`` (underscore) as attributes start with ``_`` are 
+        not make sense. Besides, `xx` should not start with ``_`` (underscore) as attributes start with ``_`` are
         private attributes that used by sdk implementation.
         ::
 
@@ -95,13 +102,15 @@ class Poco(PocoAccelerationMixin):
             arb_close_btn = poco(textMatches='^close.*$')
 
         Returns:
-            :py:class:`UIObjectProxy <poco.proxy.UIObjectProxy>`: UI proxy object representing the UI element matches 
+            :py:class:`UIObjectProxy <poco.proxy.UIObjectProxy>`: UI proxy object representing the UI element matches
             the given query expression.
         """
 
         if not name and len(kw) == 0:
-            warnings.warn("Wildcard selector may cause performance trouble. Please give at least one condition to "
-                          "shrink range of results")
+            warnings.warn(
+                "Wildcard selector may cause performance trouble. Please give at least one condition to "
+                "shrink range of results"
+            )
         return UIObjectProxy(self, name, **kw)
 
     def wait_for_any(self, objects, timeout=120):
@@ -111,7 +120,7 @@ class Poco(PocoAccelerationMixin):
         ``Poco``'s initialization for more details.
 
         Args:
-            objects (Iterable<:py:class:`UIObjectProxy <poco.proxy.UIObjectProxy>`>): iterable object of the given UI 
+            objects (Iterable<:py:class:`UIObjectProxy <poco.proxy.UIObjectProxy>`>): iterable object of the given UI
              proxies
             timeout (:obj:`float`): timeout in seconds, default is 120s
 
@@ -128,17 +137,17 @@ class Poco(PocoAccelerationMixin):
                 if obj.exists():
                     return obj
             if time.time() - start > timeout:
-                raise PocoTargetTimeout('any to appear', objects)
+                raise PocoTargetTimeout("any to appear", objects)
             self.sleep_for_polling_interval()
 
     def wait_for_all(self, objects, timeout=120):
         """
         Wait until all of given UI proxies show up before timeout.
-        All UI proxies will be polled periodically. See option :py:class:`poll_interval <poco.pocofw.Poco>` in 
+        All UI proxies will be polled periodically. See option :py:class:`poll_interval <poco.pocofw.Poco>` in
         ``Poco``'s initialization for more details.
 
         Args:
-            objects (Iterable<:py:class:`UIObjectProxy <poco.proxy.UIObjectProxy>`>): iterable object of the given UI 
+            objects (Iterable<:py:class:`UIObjectProxy <poco.proxy.UIObjectProxy>`>): iterable object of the given UI
              proxies
             timeout (:obj:`float`): timeout in seconds, default is 120s
 
@@ -156,7 +165,7 @@ class Poco(PocoAccelerationMixin):
             if all_exist:
                 return
             if time.time() - start > timeout:
-                raise PocoTargetTimeout('all to appear', objects)
+                raise PocoTargetTimeout("all to appear", objects)
             self.sleep_for_polling_interval()
 
     def freeze(this):
@@ -164,14 +173,14 @@ class Poco(PocoAccelerationMixin):
         Snapshot current **hierarchy** and cache it into a new poco instance. This new poco instance is a copy from
         current poco instance (``self``). The hierarchy of the new poco instance is fixed and immutable. It will be
         super fast when calling ``dump`` function from frozen poco. See the example below.
-        
+
         Examples:
             ::
 
                 poco = Poco(...)
                 frozen_poco = poco.freeze()
                 hierarchy_dict = frozen_poco.agent.hierarchy.dump()  # will return the already cached hierarchy data
-                
+
 
         Returns:
             :py:class:`Poco <poco.pocofw.Poco>`: new poco instance copy from current poco instance (``self``)
@@ -182,8 +191,8 @@ class Poco(PocoAccelerationMixin):
                 hierarchy_dict = this.agent.hierarchy.dump()
                 hierarchy = create_immutable_hierarchy(hierarchy_dict)
                 agent_ = PocoAgent(hierarchy, this.agent.input, this.agent.screen)
-                kwargs['action_interval'] = 0.01
-                kwargs['pre_action_wait_for_appearance'] = 0
+                kwargs["action_interval"] = 0.01
+                kwargs["pre_action_wait_for_appearance"] = 0
                 super(FrozenPoco, self).__init__(agent_, **kwargs)
                 self.this = this
 
@@ -248,8 +257,15 @@ class Poco(PocoAccelerationMixin):
         """
 
         if not (0 <= pos[0] <= 1) or not (0 <= pos[1] <= 1):
-            raise InvalidOperationException('Click position out of screen. pos={}'.format(repr(pos)))
-        ret = self.agent.input.click(pos[0], pos[1], uwa_raw_args=pos)
+            raise InvalidOperationException(
+                "Click position out of screen. pos={}".format(repr(pos))
+            )
+        try:
+            ret = self.agent.input.click(pos[0], pos[1], uwa_raw_args=pos)
+        except TypeError:
+            # 对于 OSX UI 等代理不接入到 airtest
+            ret = self.agent.input.click(pos[0], pos[1])
+
         self.wait_stable()
         return ret
 
@@ -292,16 +308,20 @@ class Poco(PocoAccelerationMixin):
         try:
             duration = float(duration)
         except ValueError:
-            raise ValueError('Argument `duration` should be <float>. Got {}'.format(repr(duration)))
+            raise ValueError(
+                "Argument `duration` should be <float>. Got {}".format(repr(duration))
+            )
 
         if not (0 <= p1[0] <= 1) or not (0 <= p1[1] <= 1):
-            raise InvalidOperationException('Swipe origin out of screen. {}'.format(repr(p1)))
+            raise InvalidOperationException(
+                "Swipe origin out of screen. {}".format(repr(p1))
+            )
         if direction is not None:
             p2 = [p1[0] + direction[0], p1[1] + direction[1]]
         elif p2 is not None:
             p2 = p2
         else:
-            raise TypeError('Swipe end not set.')
+            raise TypeError("Swipe end not set.")
         return self.agent.input.swipe(p1[0], p1[1], p2[0], p2[1], duration)
 
     def long_click(self, pos, duration=2.0):
@@ -316,13 +336,17 @@ class Poco(PocoAccelerationMixin):
         try:
             duration = float(duration)
         except ValueError:
-            raise ValueError('Argument `duration` should be <float>. Got {}'.format(repr(duration)))
+            raise ValueError(
+                "Argument `duration` should be <float>. Got {}".format(repr(duration))
+            )
 
         if not (0 <= pos[0] <= 1) or not (0 <= pos[1] <= 1):
-            raise InvalidOperationException('Click position out of screen. {}'.format(repr(pos)))
+            raise InvalidOperationException(
+                "Click position out of screen. {}".format(repr(pos))
+            )
         return self.agent.input.longClick(pos[0], pos[1], duration)
 
-    def scroll(self, direction='vertical', percent=0.6, duration=2.0):
+    def scroll(self, direction="vertical", percent=0.6, duration=2.0):
         """
         Scroll from the lower part to the upper part of the entire screen.
 
@@ -333,13 +357,16 @@ class Poco(PocoAccelerationMixin):
             duration (:py:obj:`float`): time interval in which the action is performed
         """
 
-        if direction not in ('vertical', 'horizontal'):
-            raise ValueError('Argument `direction` should be one of "vertical" or "horizontal". Got {}'
-                             .format(repr(direction)))
+        if direction not in ("vertical", "horizontal"):
+            raise ValueError(
+                'Argument `direction` should be one of "vertical" or "horizontal". Got {}'.format(
+                    repr(direction)
+                )
+            )
 
         start = [0.5, 0.5]
         half_distance = percent / 2
-        if direction == 'vertical':
+        if direction == "vertical":
             start[1] += half_distance
             direction = [0, -percent]
         else:
@@ -348,7 +375,7 @@ class Poco(PocoAccelerationMixin):
 
         return self.swipe(start, direction=direction, duration=duration)
 
-    def pinch(self, direction='in', percent=0.6, duration=2.0, dead_zone=0.1):
+    def pinch(self, direction="in", percent=0.6, duration=2.0, dead_zone=0.1):
         """
         Squeezing or expanding 2 fingers on the entire screen.
 
@@ -359,13 +386,22 @@ class Poco(PocoAccelerationMixin):
             dead_zone (:py:obj:`float`): pinching inner circle radius. should not be greater than ``percent``
         """
 
-        if direction not in ('in', 'out'):
-            raise ValueError('Argument `direction` should be one of "in" or "out". Got {}'.format(repr(direction)))
+        if direction not in ("in", "out"):
+            raise ValueError(
+                'Argument `direction` should be one of "in" or "out". Got {}'.format(
+                    repr(direction)
+                )
+            )
         if dead_zone >= percent:
-            raise ValueError('Argument `dead_zone` should not be greater than `percent`. dead_zoon={}, percent={}'
-                             .format(repr(dead_zone), repr(percent)))
+            raise ValueError(
+                "Argument `dead_zone` should not be greater than `percent`. dead_zoon={}, percent={}".format(
+                    repr(dead_zone), repr(percent)
+                )
+            )
 
-        tracks = make_pinching(direction, [0.5, 0.5], [1, 1], percent, dead_zone, duration)
+        tracks = make_pinching(
+            direction, [0.5, 0.5], [1, 1], percent, dead_zone, duration
+        )
         speed = (percent - dead_zone) / 2 / duration
 
         # 速度慢的时候，精度适当要提高，这样有助于控制准确
@@ -410,7 +446,9 @@ class Poco(PocoAccelerationMixin):
         """
 
         if not tracks:
-            raise ValueError('Please provide at least one track. Got {}'.format(repr(tracks)))
+            raise ValueError(
+                "Please provide at least one track. Got {}".format(repr(tracks))
+            )
 
         tb = MotionTrackBatch(tracks)
         return self.agent.input.applyMotionEvents(tb.discretize(accuracy))
@@ -486,22 +524,30 @@ class Poco(PocoAccelerationMixin):
             try:
                 cb(self, action, ui, args)
             except Exception as e:
-                warnings.warn("Error occurred at pre action stage.\n{}".format(traceback.format_exc()))
+                warnings.warn(
+                    "Error occurred at pre action stage.\n{}".format(
+                        traceback.format_exc()
+                    )
+                )
 
     def post_action(self, action, ui, args):
         for cb in self._post_action_callbacks:
             try:
                 cb(self, action, ui, args)
             except Exception as e:
-                warnings.warn("Error occurred at post action stage.\n{}".format(traceback.format_exc()))
+                warnings.warn(
+                    "Error occurred at post action stage.\n{}".format(
+                        traceback.format_exc()
+                    )
+                )
 
     def use_render_resolution(self, use=True, resolution=None):
-        '''
+        """
         Whether to use render resolution
 
         Args:
             use: True or false
             resolution: render resolution in portrait mode, offset_x, offset_y, offset_width, offset_height, (0, 10, 1080, 1820)
-        '''
+        """
         self._agent.input.use_render_resolution = use
         self._agent.input.render_resolution = resolution
