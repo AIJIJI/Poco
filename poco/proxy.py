@@ -5,6 +5,7 @@ import math
 import copy
 import poco.utils.six as six
 import time
+import logging
 from functools import wraps
 
 from poco.gesture import PendingGestureAction
@@ -15,6 +16,7 @@ from poco.utils.multitouch_gesture import make_pinching
 
 __all__ = ['UIObjectProxy']
 
+logger = logging.getLogger(__name__)
 
 def wait(func):
     @wraps(func)
@@ -329,7 +331,9 @@ class UIObjectProxy(object):
         """
 
         focus = focus or self._focus or 'anchor'
+        logger.info("start get_position")
         pos_in_percentage = self.get_position(focus)
+        logger.info("end get_position")
         # [UWA]
         # pre action 记录 focus 与 sleep_interval 原始值
         self.poco.pre_action(
