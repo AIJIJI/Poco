@@ -331,9 +331,9 @@ class UIObjectProxy(object):
         """
 
         focus = focus or self._focus or 'anchor'
-        logger.info("start get_position")
+        logger.info("【UWA Log】start get_position")
         pos_in_percentage = self.get_position(focus)
-        logger.info("end get_position")
+        logger.info("【UWA Log】end get_position")
         # [UWA]
         # pre action 记录 focus 与 sleep_interval 原始值
         self.poco.pre_action(
