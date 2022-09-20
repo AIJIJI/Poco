@@ -1,5 +1,5 @@
 six
 requests
-uwa-airtest
-hrpc>=1.0.5
+airtest
+hrpc>=1.0.9
 websocket-client==0.48.0
