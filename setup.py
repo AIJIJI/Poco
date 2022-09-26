@@ -10,7 +10,7 @@ def parse_requirements(filename="requirements.txt"):
 
 setup(
     name="uwa-pocoui",
-    version="1.0.85-uwa-1.0.4",
+    version="1.5.1085",
     keywords="poco, automation test, ui automation",
     description="Poco cross-engine UI automated test framework.",
     long_description="Poco cross-engine UI automated test framework. 2018 present by NetEase Games",
