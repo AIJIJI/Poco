@@ -6,7 +6,7 @@ from poco.sdk.Attributor import Attributor
 from poco.sdk.Selector import Selector
 from poco.sdk.exceptions import UnableToSetAttributeException
 from poco.sdk.interfaces.hierarchy import HierarchyInterface
-
+from poco.global_state import *
 
 __all__ = ['FrozenUIDumper', 'FrozenUIHierarchy']
 
@@ -66,7 +66,21 @@ class FrozenUIHierarchy(HierarchyInterface):
         self.attributor = attributor or Attributor()
 
     def dump(self):
-        return self.dumper.dumpHierarchy()
+        tmp_hie = self.dumper.dumpHierarchy()
+        # res = tmp_hie
+        from poco.drivers.std.dumper import StdDumper
+        from poco.drivers.std.HierarchyTranslator import translator_agent
+        from poco.freezeui.ImmutableFrozenUIDumper import ImmutableFrozenUIDumper
+
+        if isinstance( self.dumper, StdDumper):
+            res = translator_agent.Translate(tmp_hie)
+        elif isinstance( self.dumper, ImmutableFrozenUIDumper):
+            res = tmp_hie
+            if UWA_POCO_DEBUG:
+                print("FrozenUIHierarchy::dump() get result from ImmutableFrozenUIDumper")
+        else:
+            res = tmp_hie
+        return res
 
     def getAttr(self, nodes, name):
         """

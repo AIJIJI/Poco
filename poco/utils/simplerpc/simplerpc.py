@@ -158,6 +158,10 @@ class RpcAgent(object):
         if isinstance(msg, six.binary_type):
             # py3里 json 只接受str类型，py2没有这个限制
             msg = msg.decode('utf-8')
+            msg = msg.replace('\n','\\n')
+            msg = msg.replace('\r','\\r')
+
+        #print(msg)
         data = json.loads(msg)
         if DEBUG:
             print("<--", data)

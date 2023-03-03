@@ -1,7 +1,7 @@
 # coding=utf-8
 
-from poco.freezeui.hierarchy import FrozenUIDumper, FrozenUIHierarchy
-
+from poco.freezeui.hierarchy import FrozenUIDumper,FrozenUIHierarchy
+from poco.freezeui.ImmutableFrozenUIDumper import ImmutableFrozenUIDumper
 
 __all__ = ['create_immutable_hierarchy', 'create_immutable_dumper']
 
@@ -12,8 +12,4 @@ def create_immutable_hierarchy(hierarchy_dict):
 
 
 def create_immutable_dumper(hierarchy_dict):
-    class ImmutableFrozenUIDumper(FrozenUIDumper):
-        def dumpHierarchy(self, onlyVisibleNode=True):
-            return hierarchy_dict
-
-    return ImmutableFrozenUIDumper()
+    return ImmutableFrozenUIDumper(hierarchy_dict)
